@@ -1,0 +1,3 @@
+# Lecture-5
+=============
+Till lecture we have all code in one file i.e App.js. From noe we can split code in App.js to individual component.

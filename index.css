@@ -137,3 +137,30 @@ img.res-logo {
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
   background: linear-gradient(135deg, #ff6a00, #ff9e2c);
 }
+
+/* shimmerUI */
+
+.shimmerContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  height: 100vh;
+  padding: 20px 30px;
+}
+.shimmerCard {
+  display: flex;
+
+  flex-direction: column;
+  cursor: pointer;
+  height: 300px;
+  width: 320px;
+  background-color: #fff;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.shimmerCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}

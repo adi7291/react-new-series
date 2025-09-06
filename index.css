@@ -120,3 +120,20 @@ img.res-logo {
   box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.05);
   margin-top: 20px;
 }
+.topRatedBtn {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  font-size: 15px;
+  font-weight: 600;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.01);
+  background: linear-gradient(135deg, #ff7a18, #ffb347);
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.topRatedBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  background: linear-gradient(135deg, #ff6a00, #ff9e2c);
+}

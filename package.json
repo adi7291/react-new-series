@@ -3,15 +3,17 @@
   "version": "1.0.0",
   "description": "React series to revise",
   "scripts": {
-    "start":"parcel index.html",
-    "build":"parcel build index.html",
+    "start": "parcel index.html",
+    "build": "parcel build index.html",
     "test": "jest"
   },
   "author": "ramesh react",
   "license": "ISC",
   "dependencies": {
-    "parcel": "^2.15.4",
     "react": "^19.1.1",
     "react-dom": "^19.1.1"
+  },
+  "devDependencies": {
+    "parcel": "^2.15.4"
   }
 }

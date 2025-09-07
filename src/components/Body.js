@@ -2,11 +2,13 @@ import React, { useState, useEffect } from "react";
 import RestaurantCard from "./RestaurantCard";
 import { restaurant } from "../utils/restaurants";
 import Shimmer from "./Shimmer";
+import TopRestaurants from "./TopRestaurant";
 
 const Body = () => {
   let resList = restaurant.card.card.gridElements.infoWithStyle.restaurants;
 
   const [topRatedList, setTopRatedList] = useState([]);
+  const [topRestaurants, setTopRestaurants] = useState([]);
 
   //useEffect()
   const fetchData = async () => {
@@ -18,7 +20,11 @@ const Body = () => {
     const resLists =
       jsonData.data.cards[4]?.card.card?.gridElements?.infoWithStyle
         ?.restaurants;
+
     setTopRatedList(resLists);
+    const topRestaurantsList = jsonData.data.cards[1]?.card.card;
+    console.log(topRestaurantsList);
+    setTopRestaurants(topRestaurantsList);
   };
 
   useEffect(() => {
@@ -39,6 +45,8 @@ const Body = () => {
 
   return (
     <div id="main">
+      <TopRestaurants topRestaurants={topRestaurants} />
+      <hr className="divider-gradient" />
       <div className="searchItem">
         <div className="top-rated">
           <button className="topRatedBtn" onClick={handleTopRated}>

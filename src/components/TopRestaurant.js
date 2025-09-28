@@ -3,7 +3,7 @@ import RestaurantCard from "./RestaurantCard";
 
 const TopRestaurants = ({ header, topRestaurants }) => {
   let details = topRestaurants?.gridElements?.infoWithStyle?.restaurants;
-  console.log("details----", details);
+
   return (
     <div className="top-restaurants">
       <h2>{topRestaurants?.header?.title}</h2>

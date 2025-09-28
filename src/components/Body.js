@@ -1,64 +1,107 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import RestaurantCard from "./RestaurantCard";
-import { restaurant } from "../utils/restaurants";
 import Shimmer from "./Shimmer";
 import TopRestaurants from "./TopRestaurant";
 
 const Body = () => {
-  let resList = restaurant.card.card.gridElements.infoWithStyle.restaurants;
-
-  const [topRatedList, setTopRatedList] = useState([]);
+  const [listOfRestaurants, setListOfRestaurants] = useState([]);
+  const [isTopRatedActive, setIsTopRatedActive] = useState(false);
+  const [searchText, setSearchText] = useState("");
   const [topRestaurants, setTopRestaurants] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  //useEffect()
   const fetchData = async () => {
-    const response = await fetch(
-      "https://www.swiggy.com/dapi/restaurants/list/v5?lat=12.9920611&lng=77.6527173&is-seo-homepage-enabled=true&page_type=DESKTOP_WEB_LISTING"
-    );
-    const jsonData = await response.json();
+    try {
+      const response = await fetch(
+        "https://www.swiggy.com/dapi/restaurants/list/v5?lat=12.9920611&lng=77.6527173&is-seo-homepage-enabled=true&page_type=DESKTOP_WEB_LISTING"
+      );
+      const jsonData = await response.json();
 
-    const resLists =
-      jsonData.data.cards[4]?.card.card?.gridElements?.infoWithStyle
-        ?.restaurants;
+      const resLists =
+        jsonData.data.cards[4]?.card.card?.gridElements?.infoWithStyle
+          ?.restaurants || [];
 
-    setTopRatedList(resLists);
-    const topRestaurantsList = jsonData.data.cards[1]?.card.card;
-    console.log(topRestaurantsList);
-    setTopRestaurants(topRestaurantsList);
+      const topRestaurantsList = jsonData.data.cards[1]?.card.card || [];
+
+      setListOfRestaurants(resLists);
+      setTopRestaurants(topRestaurantsList);
+    } catch (error) {
+      console.error("Fetch error:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
-    console.log("useEffect called");
     fetchData();
   }, []);
 
-  const handleTopRated = () => {
-    console.log("clicked");
-    if (resList.length == 0) {
-      throw new Error("There are no restaurant in the list");
+  // ✅ useMemo to optimize filtering
+  const filteredRestaurants = useMemo(() => {
+    let temp = listOfRestaurants;
+
+    if (isTopRatedActive) {
+      temp = temp.filter((item) => item.info.avgRating > 4.4);
     }
-    const filterTopRatedList = resList.filter(
-      (item) => item.info.avgRating > 4.7
-    );
-    setTopRatedList(filterTopRatedList);
+
+    if (searchText.trim() !== "") {
+      temp = temp.filter((item) =>
+        item.info.name.toLowerCase().includes(searchText.toLowerCase())
+      );
+    }
+
+    return temp;
+  }, [searchText, isTopRatedActive, listOfRestaurants]);
+
+  const handleTopRated = () => {
+    setIsTopRatedActive((prev) => !prev);
+  };
+
+  const resetAllFilter = () => {
+    setSearchText("");
+    setIsTopRatedActive(false);
+  };
+  const filterByName = (e) => {
+    setSearchText(e.target.value);
   };
 
   return (
     <div id="main">
       <TopRestaurants topRestaurants={topRestaurants} />
       <hr className="divider-gradient" />
-      <div className="searchItem">
+
+      {/* Filters */}
+      <div className="search-item">
+        <div className="allFilter">
+          <div className="top-rated">
+            <button className="topRatedBtn" onClick={handleTopRated}>
+              {isTopRatedActive ? "Show All" : "Top Rated"}
+            </button>
+          </div>
+          <div className="search-restaurants">
+            <input
+              id="search-restaurant"
+              value={searchText}
+              onChange={filterByName}
+              placeholder="Search Restaurants..."
+            />
+          </div>
+        </div>
         <div className="top-rated">
-          <button className="topRatedBtn" onClick={handleTopRated}>
-            Top Rated
+          <button className="resetBtn" onClick={resetAllFilter}>
+            Reset Filters
           </button>
         </div>
       </div>
-      {topRatedList.length == 0 ? (
+
+      {/* Loader / Results */}
+      {loading ? (
         <Shimmer />
+      ) : filteredRestaurants.length === 0 ? (
+        <p>No restaurants found</p>
       ) : (
         <div className="res-container">
-          {topRatedList.map((item, index) => (
+          {filteredRestaurants.map((item) => (
             <RestaurantCard
               key={item.info.id}
               image={item.info.cloudinaryImageId}
@@ -73,4 +116,5 @@ const Body = () => {
     </div>
   );
 };
+
 export default Body;
